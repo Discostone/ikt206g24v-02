@@ -36,32 +36,31 @@
 # For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
 # refer to https://github.com/microsoft/github-actions-for-desktop-apps
 
-name: .NET Build and Test
+name: .NET
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
-  build-and-test:
-    runs-on: windows-latest
+  build:
+
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-
-    - name: Setup .NET Core
+    - uses: actions/checkout@v3
+    - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x  # Replace this with your project's .NET version
-
+        dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
-
+      working-directory: ./ClassLibraryProject
     - name: Build
-      run: dotnet build --configuration Release --no-restore
-
+      run: dotnet build --no-restore
+      working-directory: ./ClassLibraryProject
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --no-build --verbosity normal
+      working-directory: ./ClassLibraryProject
